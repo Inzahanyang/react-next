@@ -3,7 +3,9 @@ import AppLayout from "../components/AppLayout";
 export default () => {
   return (
     <AppLayout>
-      <div>메인 페이지</div>
+      <div>
+        <h1>Main Page</h1>
+      </div>
     </AppLayout>
   );
 };

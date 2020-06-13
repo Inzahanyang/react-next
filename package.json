@@ -17,9 +17,14 @@
   },
   "homepage": "https://github.com/Inzahanyang/react-next#readme",
   "dependencies": {
+    "@ant-design/icons": "^4.2.1",
+    "antd": "^4.3.3",
+    "babel-plugin-styled-components": "^1.10.7",
     "next": "^9.4.4",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-hook-form": "^5.7.2",
+    "styled-components": "^5.1.1"
   }
 }
