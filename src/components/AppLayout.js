@@ -1,10 +1,10 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
 import Link from "next/link";
 import { Menu, Input, Row, Col } from "antd";
 import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const TopMenu = styled(Menu).attrs((props) => ({
   mode: "horizontal",
@@ -59,7 +59,8 @@ const H1 = styled.h1`
 `;
 
 const AppLayout = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useSelector((state) => state.user);
+
   return (
     <>
       <TopMenu>
@@ -83,13 +84,7 @@ const AppLayout = ({ children }) => {
         </Menu.Item>
       </TopMenu>
       <Main>
-        <Left>
-          {isLoggedIn ? (
-            <UserProfile setIsLoggedIn={setIsLoggedIn} />
-          ) : (
-            <LoginForm setIsLoggedIn={setIsLoggedIn} />
-          )}
-        </Left>
+        <Left>{isLoggedIn ? <UserProfile /> : <LoginForm />}</Left>
         <Middle>{children}</Middle>
         <Right>
           <ATag>

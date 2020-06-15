@@ -11,6 +11,10 @@ const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
 
+const InputS = styled(Input)`
+  width: 50%;
+`;
+
 export default () => {
   const [id, onChangeId] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
@@ -49,12 +53,12 @@ export default () => {
         <div>
           <label htmlFor="user-id">ID</label>
           <br />
-          <Input name="user-id" value={id} onChange={onChangeId} required />
+          <InputS name="user-id" value={id} onChange={onChangeId} required />
         </div>
         <div>
           <label htmlFor="user-nick">Nickname</label>
           <br />
-          <Input
+          <InputS
             name="user-nick"
             value={nickname}
             onChange={onChangeNickname}
@@ -64,7 +68,7 @@ export default () => {
         <div>
           <label htmlFor="user-password">Password</label>
           <br />
-          <Input
+          <InputS
             name="user-password"
             value={password}
             onChange={onChangePassword}
@@ -74,7 +78,7 @@ export default () => {
         <div>
           <label htmlFor="user-password-check">Password Check</label>
           <br />
-          <Input
+          <InputS
             name="user-password-check"
             value={passwordCheck}
             onChange={onChangePasswordCheck}

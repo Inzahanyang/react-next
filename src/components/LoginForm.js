@@ -3,6 +3,8 @@ import { Input, Form, Button } from "antd";
 import Link from "next/link";
 import styled from "styled-components";
 import useInput from "../hooks/useInput";
+import { useDispatch } from "react-redux";
+import { loginAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin: 20px 0;
@@ -12,13 +14,15 @@ const FormWrapper = styled(Form)`
   padding: 10px;
 `;
 
-export default ({ setIsLoggedIn }) => {
+export default () => {
+  const dispatch = useDispatch();
+
   const [id, onChangeID] = useInput("");
   const [password, onChangePassword] = useInput("");
 
   const onsubmitForm = useCallback(() => {
     console.log(id, password);
-    setIsLoggedIn(true);
+    dispatch(loginAction({ id, password }));
   }, [id, password]);
 
   return (
