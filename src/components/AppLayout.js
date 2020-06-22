@@ -12,7 +12,6 @@ const TopMenu = styled(Menu).attrs((props) => ({
   background-color: #f0e3ba;
   text-align: center;
 `;
-
 const InputSearch = styled(Input.Search).attrs((props) => ({
   placeholder: "Search",
 }))`
@@ -20,13 +19,11 @@ const InputSearch = styled(Input.Search).attrs((props) => ({
   height: 24px;
   vertical-align: middle;
 `;
-
 const Main = styled(Row).attrs((props) => ({
   gutter: 8,
 }))`
   height: 100vh;
 `;
-
 const Left = styled(Col).attrs((props) => ({
   xs: 24,
   md: 6,
@@ -34,7 +31,6 @@ const Left = styled(Col).attrs((props) => ({
   background-color: #eaf0ba;
   text-align: center;
 `;
-
 const Middle = styled(Col).attrs((props) => ({
   xs: 24,
   md: 12,
@@ -49,17 +45,13 @@ const Right = styled(Col).attrs((props) => ({
   background-color: #bacff0;
   text-align: center;
 `;
-
-const ATag = styled.a.attrs((props) => ({
-  href: "http://banguham.com",
-}))``;
-
+const ATag = styled.a.attrs((props) => ({ href: "http://banguham.com" }))``;
 const H1 = styled.h1`
   color: #fff;
 `;
 
 const AppLayout = ({ children }) => {
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
 
   return (
     <>
@@ -84,7 +76,7 @@ const AppLayout = ({ children }) => {
         </Menu.Item>
       </TopMenu>
       <Main>
-        <Left>{isLoggedIn ? <UserProfile /> : <LoginForm />}</Left>
+        <Left>{me ? <UserProfile /> : <LoginForm />}</Left>
         <Middle>{children}</Middle>
         <Right>
           <ATag>

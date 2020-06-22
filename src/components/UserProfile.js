@@ -14,7 +14,7 @@ const CardWrapper = styled(Card)`
 
 export default () => {
   const dispatch = useDispatch();
-  const { me, isLoggingOut } = useSelector((state) => state.user);
+  const { me, logOutLoading } = useSelector((state) => state.user);
   console.log(me);
   const onLogout = useCallback(() => {
     dispatch(logoutRequestAction());
@@ -24,20 +24,23 @@ export default () => {
       actions={[
         <Bottom key="twit">
           Twit
-          <br />3
+          <br />
+          {me.Posts.length}
         </Bottom>,
         <Bottom key="followings">
           Followings
-          <br />4
+          <br />
+          {me.Followings.length}
         </Bottom>,
         <Bottom key="followers">
           Followers
-          <br />5
+          <br />
+          {me.Followers.length}
         </Bottom>,
       ]}
     >
       <Card.Meta avatar={<Avatar>{me.nickname && me.nickname[0]}</Avatar>} title={me.nickname} />
-      <Button onClick={onLogout} loading={isLoggingOut}>
+      <Button onClick={onLogout} loading={logOutLoading}>
         Log Out
       </Button>
     </CardWrapper>

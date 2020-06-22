@@ -1,23 +1,15 @@
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
+import { useSelector } from "react-redux";
 
 export default () => {
-  const followerList = [
-    { nickname: "Inzahan" },
-    { nickname: "Yangwoo" },
-    { nickname: "Jiny" },
-  ];
-  const followingList = [
-    { nickname: "Inzahan" },
-    { nickname: "Yangwoo" },
-    { nickname: "Jiny" },
-  ];
+  const { me } = useSelector((state) => state.user);
   return (
     <AppLayout>
       <NicknameEditForm />
-      <FollowList header="FollowingList" data={followingList} />
-      <FollowList header="FollowerList" data={followerList} />
+      <FollowList header="FollowingList" data={me && me.Followings} />
+      <FollowList header="FollowerList" data={me && me.Followers} />
     </AppLayout>
   );
 };

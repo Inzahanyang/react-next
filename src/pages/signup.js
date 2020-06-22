@@ -1,8 +1,11 @@
 import AppLayout from "../components/AppLayout";
 import { Form, Input, Checkbox, Button } from "antd";
 import useInput from "../hooks/useInput";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
+import { SIGN_UP_REQUEST } from "../reducers/user";
+import { useRouter } from "next/dist/client/router";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -10,18 +13,22 @@ const ErrorMessage = styled.div`
 const ButtonWrapper = styled.div`
   margin-top: 10px;
 `;
-
 const InputS = styled(Input)`
   width: 50%;
 `;
 
 export default () => {
-  const [id, onChangeId] = useInput("");
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { signUpLoading, signUpDone } = useSelector((state) => state.user);
+
+  const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
 
   const [password, onChangePassword] = useInput("");
   const [passwordCheck, setPasswordCheck] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+
   const onChangePasswordCheck = useCallback(
     (e) => {
       setPasswordCheck(e.target.value);
@@ -29,6 +36,12 @@ export default () => {
     },
     [password]
   );
+
+  useEffect(() => {
+    if (signUpDone) {
+      router.push("/");
+    }
+  }, [signUpDone]);
 
   const [term, setTerm] = useState("");
   const [termError, setTermError] = useState(false);
@@ -44,57 +57,44 @@ export default () => {
     if (!term) {
       return setTermError(true);
     }
-    console.log(id, nickname, password);
-  }, [password, passwordCheck, term]);
+    dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
+  }, [email, password, passwordCheck, term]);
 
   return (
     <AppLayout>
       <Form onFinish={onSubmit}>
         <div>
-          <label htmlFor="user-id">ID</label>
+          <label htmlFor="user-email">Email</label>
           <br />
-          <InputS name="user-id" value={id} onChange={onChangeId} required />
+          <InputS name="user-email" type="email" value={email} onChange={onChangeEmail} required />
         </div>
         <div>
           <label htmlFor="user-nick">Nickname</label>
           <br />
-          <InputS
-            name="user-nick"
-            value={nickname}
-            onChange={onChangeNickname}
-            required
-          />
+          <InputS name="user-nick" value={nickname} onChange={onChangeNickname} required />
         </div>
         <div>
           <label htmlFor="user-password">Password</label>
           <br />
-          <InputS
-            name="user-password"
-            value={password}
-            onChange={onChangePassword}
-            required
-          />
+          <InputS name="user-password" value={password} onChange={onChangePassword} required />
         </div>
         <div>
           <label htmlFor="user-password-check">Password Check</label>
           <br />
-          <InputS
-            name="user-password-check"
-            value={passwordCheck}
-            onChange={onChangePasswordCheck}
-          />
+          <InputS name="user-password-check" value={passwordCheck} onChange={onChangePasswordCheck} />
           {passwordError && <ErrorMessage>Password not match</ErrorMessage>}
         </div>
         <div>
           <Checkbox name="user-term" checked={term} onChange={onChangeTerm}>
             Accept privacy policy and Terms
           </Checkbox>
-          {termError && (
-            <ErrorMessage>Need to accept Usage Policy</ErrorMessage>
-          )}
+          {termError && <ErrorMessage>Need to accept Usage Policy</ErrorMessage>}
         </div>
         <ButtonWrapper>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>
             Sign Up
           </Button>
         </ButtonWrapper>
