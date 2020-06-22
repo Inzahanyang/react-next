@@ -1,27 +1,32 @@
 import { Card, Popover, Button, Avatar, List, Comment } from "antd";
-import {
-  RetweetOutlined,
-  HeartOutlined,
-  MessageOutlined,
-  EllipsisOutlined,
-  HeartTwoTone,
-} from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { RetweetOutlined, HeartOutlined, MessageOutlined, EllipsisOutlined, HeartTwoTone } from "@ant-design/icons";
+import { useSelector, useDispatch } from "react-redux";
 import PostImages from "./PostImages";
 import { useState, useCallback } from "react";
 import CommentForm from "./CommentForm";
+import { REMOVE_POST_REQUEST } from "../reducers/post";
 
 export default ({ post }) => {
+  const dispatch = useDispatch();
+
   const [liked, setLiked] = useState(false);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
 
   const id = useSelector((state) => state.user.me?.id);
+  const { removePostLoading } = useSelector((state) => state.post);
 
   const onToggleLike = useCallback(() => {
     setLiked((prev) => !prev);
   }, []);
   const onToggleComment = useCallback(() => {
     setCommentFormOpened((prev) => !prev);
+  }, []);
+
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
   }, []);
   return (
     <div style={{ marginBottom: 20 }}>
@@ -30,11 +35,7 @@ export default ({ post }) => {
         actions={[
           <RetweetOutlined key="retweet" />,
           liked ? (
-            <HeartTwoTone
-              twoToneColor="#eb2f96"
-              key="heart"
-              onClick={onToggleLike}
-            />
+            <HeartTwoTone twoToneColor="#eb2f96" key="heart" onClick={onToggleLike} />
           ) : (
             <HeartOutlined key="heart" onClick={onToggleLike} />
           ),
@@ -46,7 +47,9 @@ export default ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>Edit</Button>
-                    <Button>Delete</Button>
+                    <Button loading={removePostLoading} onClick={onRemovePost}>
+                      Delete
+                    </Button>
                   </>
                 ) : (
                   <Button>Report</Button>
