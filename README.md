@@ -2,7 +2,7 @@
 
 db.sync() after create database(npx sequelize db:create)
 
-ERD DB modeling https://www.erdcloud.com/, https://dbdiagram.io/home, https://www.jetbrains.com/ko-kr/datagrip/
+ERD DB modeling https://www.erdcloud.com/ https://dbdiagram.io/home https://www.jetbrains.com/ko-kr/datagrip/
 
 ## Back
 
