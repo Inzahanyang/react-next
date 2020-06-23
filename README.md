@@ -4,7 +4,7 @@ db.sync() after create database(npx sequelize db:create)
 
 ERD DB modeling https://www.erdcloud.com/, https://dbdiagram.io/home, https://www.jetbrains.com/ko-kr/datagrip/
 
-##Back
+## Back
 
 - express
 - nodemon
@@ -12,7 +12,7 @@ ERD DB modeling https://www.erdcloud.com/, https://dbdiagram.io/home, https://ww
 - sequelize
 - sequelize-cli
 
-##Front
+## Front
 
 - next
 - react
