@@ -10,10 +10,33 @@ import {
   REMOVE_POST_REQUEST,
   REMOVE_POST_FAILURE,
   REMOVE_POST_SUCCESS,
+  LOAD_POSTS_REQUEST,
+  LOAD_POSTS_FAILURE,
+  LOAD_POSTS_SUCCESS,
+  generateDummyPost,
 } from "../reducers/post";
 import axios from "axios";
 import shortid from "shortid";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
+
+function loadPostsAPI() {
+  axios.get("/api");
+}
+
+function* loadPosts(action) {
+  try {
+    delay(2000);
+    yield put({
+      type: LOAD_POSTS_SUCCESS,
+      data: generateDummyPost(10),
+    });
+  } catch (e) {
+    yield put({
+      type: LOAD_POSTS_FAILURE,
+      e: e.response.data,
+    });
+  }
+}
 
 function addPostAPI() {
   axios.post("/");
@@ -37,7 +60,7 @@ function* addPost(action) {
   } catch (e) {
     yield put({
       type: ADD_POST_FAILURE,
-      data: e,
+      e: e.response.data,
     });
   }
 }
@@ -60,7 +83,7 @@ function* removePost(action) {
   } catch (e) {
     yield put({
       type: REMOVE_POST_FAILURE,
-      data: e,
+      e: e.response.data,
     });
   }
 }
@@ -79,9 +102,13 @@ function* addComment(action) {
   } catch (e) {
     yield put({
       type: ADD_COMMENT_FAILURE,
-      data: e,
+      e: e.response.data,
     });
   }
+}
+
+function* watchLoadPosts() {
+  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
 }
 
 function* watchAddPost() {
@@ -95,5 +122,5 @@ function* watchAddComment() {
 }
 
 export default function* postSaga() {
-  yield all([fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment)]);
+  yield all([fork(watchLoadPosts), fork(watchAddPost), fork(watchRemovePost), fork(watchAddComment)]);
 }

@@ -15,7 +15,6 @@ const CardWrapper = styled(Card)`
 export default () => {
   const dispatch = useDispatch();
   const { me, logOutLoading } = useSelector((state) => state.user);
-  console.log(me);
   const onLogout = useCallback(() => {
     dispatch(logoutRequestAction());
   }, []);

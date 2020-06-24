@@ -1,6 +1,12 @@
 import produce from "immer";
 
 export const initialState = {
+  followLoading: false,
+  followDone: false,
+  followError: null,
+  unfollowLoading: false,
+  unfollowDone: false,
+  unfollowError: null,
   logInLoading: false,
   logInDone: false,
   logInError: null,
@@ -55,11 +61,39 @@ const dummyUser = (data) => ({
 });
 
 export const loginRequestAction = (data) => ({ type: LOG_IN_REQUEST, data });
-export const logoutRequestAction = (data) => ({ type: LOG_OUT_REQUEST, data });
+export const logoutRequestAction = () => ({ type: LOG_OUT_REQUEST });
 
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
     switch (action.type) {
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followDone = false;
+        draft.followError = null;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.followDone = true;
+        draft.me.Followings.push({ id: action.data });
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.e;
+        break;
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowDone = false;
+        draft.unfollowError = null;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.unfollowDone = true;
+        draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.e;
+        break;
       case LOG_IN_REQUEST:
         draft.logInLoading = true;
         draft.logInDone = false;
@@ -68,7 +102,7 @@ const reducer = (state = initialState, action) =>
       case LOG_IN_SUCCESS:
         draft.logInLoading = false;
         draft.logInDone = true;
-        draft.me = dummyUser(action.data);
+        draft.me = action.data;
         break;
       case LOG_IN_FAILURE:
         draft.logInLoading = false;
@@ -82,7 +116,7 @@ const reducer = (state = initialState, action) =>
       case LOG_OUT_SUCCESS:
         draft.logOutLoading = false;
         draft.logOutDone = true;
-        me = null;
+        draft.me = null;
         break;
       case LOG_OUT_FAILURE:
         draft.logOutLoading = false;

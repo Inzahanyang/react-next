@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { SIGN_UP_REQUEST } from "../reducers/user";
-import { useRouter } from "next/dist/client/router";
+import Router from "next/router";
 
 const ErrorMessage = styled.div`
   color: red;
@@ -18,9 +18,8 @@ const InputS = styled(Input)`
 `;
 
 export default () => {
-  const router = useRouter();
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone } = useSelector((state) => state.user);
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector((state) => state.user);
 
   const [email, onChangeEmail] = useInput("");
   const [nickname, onChangeNickname] = useInput("");
@@ -38,10 +37,22 @@ export default () => {
   );
 
   useEffect(() => {
+    if (me && me.id) {
+      Router.replace("/");
+    }
+  }, [me && me.id]);
+
+  useEffect(() => {
     if (signUpDone) {
-      router.push("/");
+      Router.replace("/");
     }
   }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const [term, setTerm] = useState("");
   const [termError, setTermError] = useState(false);
