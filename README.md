@@ -4,6 +4,7 @@ db.sync() after create database(npx sequelize db:create)
 ERD DB modeling https://www.erdcloud.com/ https://dbdiagram.io/home https://www.jetbrains.com/ko-kr/datagrip/
 req.body(express.json(), express.urlencoded)
 sequelize[attributes(exclude), include(as)]
+npx sequelize init, sequelize db:create
 
 If use window.addEventListener in useEffect also use window.removeEventListener
 react-virtualized(React components for efficiently rendering large lists and tabular data)

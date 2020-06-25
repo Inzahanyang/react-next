@@ -2,7 +2,7 @@ import { Card, Avatar, Button } from "antd";
 import styled from "styled-components";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutRequestAction } from "../reducers/user";
+import { logoutRequestAction, LOG_OUT_REQUEST } from "../reducers/user";
 
 const Bottom = styled.div`
   font-size: 10px;
@@ -16,7 +16,9 @@ export default () => {
   const dispatch = useDispatch();
   const { me, logOutLoading } = useSelector((state) => state.user);
   const onLogout = useCallback(() => {
-    dispatch(logoutRequestAction());
+    dispatch({
+      type: LOG_OUT_REQUEST,
+    });
   }, []);
   return (
     <CardWrapper
