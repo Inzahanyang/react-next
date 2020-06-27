@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { UNFOLLOW_REQUEST, FOLLOW_REQUEST } from "../reducers/user";
 
 export default ({ post }) => {
-  const dispatch = useDispatch();
   const { me, followLoading, unfollowLoading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
+  if (post.User.id === me.id) return null;
 
   const onClickButton = useCallback(() => {
     if (isFollowing) {

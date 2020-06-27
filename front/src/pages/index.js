@@ -4,6 +4,7 @@ import PostForm from "../components/PostForm";
 import PostCard from "../components/PostCard";
 import { useEffect } from "react";
 import { LOAD_POSTS_REQUEST } from "../reducers/post";
+import { LOAD_USER_REQUEST } from "../reducers/user";
 
 export default () => {
   const dispatch = useDispatch();
@@ -11,6 +12,9 @@ export default () => {
   const { mainPosts, hasMorePosts, loadPostsLoading } = useSelector((state) => state.post);
 
   useEffect(() => {
+    dispatch({
+      type: LOAD_USER_REQUEST,
+    });
     dispatch({
       type: LOAD_POSTS_REQUEST,
     });

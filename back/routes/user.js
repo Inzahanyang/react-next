@@ -3,8 +3,44 @@ const bcrypt = require("bcrypt");
 const { User, Post } = require("../models");
 const router = express.Router();
 const passport = require("passport");
+const { isLoggedIn, isNotLoggedIn } = require("./middlewares");
 
-router.post("/login", (req, res, next) => {
+router.get("/", async (req, res, next) => {
+  try {
+    if (req.user) {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.user.id },
+        attributes: {
+          exclude: ["password"],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followings",
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followers",
+            attributes: ["id"],
+          },
+        ],
+      });
+      res.status(200).json(fullUserWithoutPassword);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.post("/login", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
       console.error(err);
@@ -26,14 +62,17 @@ router.post("/login", (req, res, next) => {
         include: [
           {
             model: Post,
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followings",
+            attributes: ["id"],
           },
           {
             model: User,
             as: "Followers",
+            attributes: ["id"],
           },
         ],
       });
@@ -42,7 +81,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", isNotLoggedIn, async (req, res, next) => {
   try {
     const exUser = await User.findOne({
       where: {
@@ -66,10 +105,88 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   req.logOut();
   req.session.destroy();
   res.send("logout success");
+});
+
+router.patch("/nickname", isLoggedIn, async (req, res, next) => {
+  console.log(req.body);
+  try {
+    await User.update(
+      {
+        nickname: req.body.nickname,
+      },
+      {
+        where: { id: req.user.id },
+      }
+    );
+    res.status(200).json({ nickname: req.body.nickname });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.patch("/:userId/follow", isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: parseInt(req.params.userId) } });
+    if (!user) return res.status(401).send("Not exist user");
+    await user.addFollowers(req.user.id);
+    res.status(200).json({ UserId: parseInt(req.params.userId) });
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.delete("/:userId/follow", isLoggedIn, async (req, res, next) => {
+  const user = await User.findOne({ where: { id: parseInt(req.params.userId) } });
+  if (!user) return res.status(401).send("Not exist user");
+  await user.removeFollowers(req.user.id);
+  res.status(200).json({ UserId: parseInt(req.params.userId) });
+  try {
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.get("/followers", isLoggedIn, async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) return res.status(404).send("Not exist User");
+    const followers = await user.getFollowers();
+    res.status(200).json(followers);
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.get("/followings", isLoggedIn, async (req, res, next) => {
+  const user = await User.findOne({ where: { id: req.user.id } });
+  if (!user) return res.status(403).send("Not exist user");
+  const followings = await user.getFollowings();
+  res.status(200).json(followings);
+  try {
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
+});
+
+router.delete("/:userId/follower", isLoggedIn, async (req, res, next) => {
+  const user = await User.findOne({ where: { id: parseInt(req.params.userId) } });
+  if (!user) return res.status(401).send("Not exist user");
+  await user.removeFollowings(req.user.id);
+  res.status(200).json({ UserId: parseInt(req.params.userId) });
+  try {
+  } catch (e) {
+    console.error(e);
+    next(e);
+  }
 });
 
 module.exports = router;

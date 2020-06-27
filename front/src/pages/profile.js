@@ -1,12 +1,24 @@
 import AppLayout from "../components/AppLayout";
 import NicknameEditForm from "../components/NicknameEditForm";
 import FollowList from "../components/FollowList";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import Router from "next/router";
+import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST } from "../reducers/user";
 
 export default () => {
+  const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_FOLLOWERS_REQUEST,
+    });
+    dispatch({
+      type: LOAD_FOLLOWINGS_REQUEST,
+    });
+  }, []);
+
   useEffect(() => {
     if (!(me && me.id)) {
       Router.push("/");
@@ -19,8 +31,8 @@ export default () => {
   return (
     <AppLayout>
       <NicknameEditForm />
-      <FollowList header="FollowingList" data={me && me.Followings} />
-      <FollowList header="FollowerList" data={me && me.Followers} />
+      <FollowList header="Followings" data={me && me.Followings} />
+      <FollowList header="Followers" data={me && me.Followers} />
     </AppLayout>
   );
 };

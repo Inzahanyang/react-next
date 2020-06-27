@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ADD_COMMENT_REQUEST } from "../reducers/post";
 
 export default ({ post }) => {
+  const dispatch = useDispatch();
   const id = useSelector((state) => state.user.me?.id);
   const { addCommentDone, addCommentLoading } = useSelector((state) => state.post);
   const [commentText, onChangeCommentText, setCommnetText] = useInput("");
@@ -15,7 +16,6 @@ export default ({ post }) => {
     }
   }, [addCommentDone]);
 
-  const dispatch = useDispatch();
   const onSubmitComment = useCallback(() => {
     dispatch({
       type: ADD_COMMENT_REQUEST,
