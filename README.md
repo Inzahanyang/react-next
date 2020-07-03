@@ -53,6 +53,10 @@ axios.default.baseURL
 - immer
 - shortid
 - react-slick
+- moment
+- swr
+
+- compression-webpack-plugin
 
 #### ect
 
