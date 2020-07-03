@@ -8,11 +8,14 @@ import AppLayout from "../components/AppLayout";
 import wrapper from "../store/configureStore";
 import { LOAD_USER_REQUEST } from "../reducers/user";
 
-const About = () => {
+const Profile = () => {
   const { userInfo } = useSelector((state) => state.user);
 
   return (
     <AppLayout>
+      <Head>
+        <title>ZeroCho | NodeBird</title>
+      </Head>
       {userInfo ? (
         <Card
           actions={[
@@ -39,14 +42,13 @@ const About = () => {
             description="노드버드 매니아"
           />
         </Card>
-      ) : (
-        <div>Hello</div>
-      )}
+      ) : null}
     </AppLayout>
   );
 };
 
 export const getStaticProps = wrapper.getStaticProps(async (context) => {
+  console.log("getStaticProps");
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
     data: 1,
@@ -55,4 +57,4 @@ export const getStaticProps = wrapper.getStaticProps(async (context) => {
   await context.store.sagaTask.toPromise();
 });
 
-export default About;
+export default Profile;

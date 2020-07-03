@@ -12,6 +12,8 @@ If use window.addEventListener in useEffect also use window.removeEventListener
 react-virtualized(React components for efficiently rendering large lists and tabular data)
 axios.default.baseURL
 
+env config(ANALYZE, NODE_ENV) => if windows (npm i cross-env) (cross-env ANALYZE=true NODE_ENV=production next build)
+
 ## Back
 
 - express

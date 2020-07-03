@@ -45,7 +45,6 @@ function loadFollowersAPI() {
 function* loadFollowers() {
   try {
     const result = yield call(loadFollowersAPI);
-    console.log(result.data);
     yield put({
       type: LOAD_FOLLOWERS_SUCCESS,
       data: result.data,
@@ -76,22 +75,23 @@ function* loadFollowings() {
     });
   }
 }
-
 function changeNicknameAPI(data) {
-  return axios.patch(`/user/nickname`, { nickname: data });
+  return axios.patch("/user/nickname", { nickname: data });
 }
 
 function* changeNickname(action) {
   try {
     const result = yield call(changeNicknameAPI, action.data);
+    console.log(result);
     yield put({
       type: CHANGE_NICKNAME_SUCCESS,
       data: result.data,
     });
-  } catch (e) {
+  } catch (err) {
+    console.error(err);
     yield put({
       type: CHANGE_NICKNAME_FAILURE,
-      data: e.response.data,
+      e: err.response.data,
     });
   }
 }
@@ -100,7 +100,7 @@ function loadMyInfoAPI() {
   return axios.get("/user");
 }
 
-function* loadMyInfo(action) {
+function* loadMyInfo() {
   try {
     const result = yield call(loadMyInfoAPI);
     yield put({
@@ -108,7 +108,6 @@ function* loadMyInfo(action) {
       data: result.data,
     });
   } catch (e) {
-    console.log(e);
     yield put({
       type: LOAD_MY_INFO_FAILURE,
       e: e.response.data,
@@ -142,7 +141,6 @@ function followAPI(data) {
 function* follow(action) {
   try {
     const result = yield call(followAPI, action.data);
-    console.log(result);
     yield put({
       type: FOLLOW_SUCCESS,
       data: result.data,
@@ -200,7 +198,6 @@ function logInAPI(data) {
 function* logIn(action) {
   try {
     const result = yield call(logInAPI, action.data);
-    console.log(result);
     yield put({
       type: LOG_IN_SUCCESS,
       data: result.data,
