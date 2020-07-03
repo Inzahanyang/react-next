@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutRequestAction, LOG_OUT_REQUEST } from "../reducers/user";
+import Link from "next/link";
 
 const Bottom = styled.div`
   font-size: 10px;
@@ -26,21 +27,36 @@ export default () => {
         <Bottom key="twit">
           Twit
           <br />
-          {me.Posts.length}
+          <Link href={`/user/${me.id}`}>
+            <a>{me.Posts.length}</a>
+          </Link>
         </Bottom>,
         <Bottom key="followings">
           Followings
           <br />
-          {me.Followings.length}
+          <Link href="/profile">
+            <a>{me.Followings.length}</a>
+          </Link>
         </Bottom>,
         <Bottom key="followers">
           Followers
           <br />
-          {me.Followers.length}
+          <Link href="/profile">
+            <a>{me.Followers.length}</a>
+          </Link>
         </Bottom>,
       ]}
     >
-      <Card.Meta avatar={<Avatar>{me.nickname && me.nickname[0]}</Avatar>} title={me.nickname} />
+      <Card.Meta
+        avatar={
+          <Link href={`/user/${me.id}`}>
+            <a>
+              <Avatar>{me.nickname && me.nickname[0]}</Avatar>
+            </a>
+          </Link>
+        }
+        title={me.nickname}
+      />
       <Button onClick={onLogout} loading={logOutLoading}>
         Log Out
       </Button>

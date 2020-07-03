@@ -5,6 +5,9 @@ import UserProfile from "./UserProfile";
 import LoginForm from "./LoginForm";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
+import useInput from "../hooks/useInput";
+import { useCallback } from "react";
+import Router from "next/router";
 
 const TopMenu = styled(Menu).attrs((props) => ({
   mode: "horizontal",
@@ -52,6 +55,11 @@ const H1 = styled.h1`
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
+  const [searchInput, onChangeSearchInput] = useInput();
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+  }, [searchInput]);
 
   return (
     <>
@@ -67,13 +75,13 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item>
-          <InputSearch />
+          <InputSearch enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </Menu.Item>
-        <Menu.Item>
+        {/* <Menu.Item>
           <Link href="/signup">
             <a>Sign Up</a>
           </Link>
-        </Menu.Item>
+        </Menu.Item> */}
       </TopMenu>
       <Main>
         <Left>{me ? <UserProfile /> : <LoginForm />}</Left>

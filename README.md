@@ -1,5 +1,7 @@
 # react-next
 
+mysqld stop
+mysql.server start
 db.sync() after create database(npx sequelize db:create)
 ERD DB modeling https://www.erdcloud.com/ https://dbdiagram.io/home https://www.jetbrains.com/ko-kr/datagrip/
 req.body(express.json(), express.urlencoded)
@@ -25,6 +27,7 @@ axios.default.baseURL
 - express-session
 - cookie-parser
 - dotenv
+- multer
 
 ## Front
 

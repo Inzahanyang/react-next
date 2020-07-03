@@ -31,6 +31,9 @@ import {
   REMOVE_FOLLOWER_REQUEST,
   REMOVE_FOLLOWER_SUCCESS,
   REMOVE_FOLLOWER_FAILURE,
+  LOAD_MY_INFO_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
 } from "../reducers/user";
 
 // call 비동기 fork 동기
@@ -93,13 +96,33 @@ function* changeNickname(action) {
   }
 }
 
-function loadUserAPI() {
+function loadMyInfoAPI() {
   return axios.get("/user");
+}
+
+function* loadMyInfo(action) {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    yield put({
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (e) {
+    console.log(e);
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
+      e: e.response.data,
+    });
+  }
+}
+
+function loadUserAPI(data) {
+  return axios.get(`/user/${data}`);
 }
 
 function* loadUser(action) {
   try {
-    const result = yield call(loadUserAPI);
+    const result = yield call(loadUserAPI, action.data);
     yield put({
       type: LOAD_USER_SUCCESS,
       data: result.data,
@@ -227,6 +250,10 @@ function* signUp(action) {
   }
 }
 
+function* watchLoadMyInfo() {
+  yield takeLatest(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
+
 function* watchLoadFollowers() {
   yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
 }
@@ -267,6 +294,7 @@ function* watchSignUp() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadMyInfo),
     fork(watchLoadFollowers),
     fork(watchLoadFollowings),
     fork(watchChangeNickname),

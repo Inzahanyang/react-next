@@ -1,6 +1,9 @@
 import produce from "immer";
 
 export const initialState = {
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
   loadFollowersLoading: false,
   loadFollowersDone: false,
   loadFollowersError: null,
@@ -32,9 +35,12 @@ export const initialState = {
   changeNicknameDone: false,
   changeNicknameError: null,
   me: null,
-  signUpData: {},
-  loginData: {},
+  userInfo: null,
 };
+
+export const LOAD_MY_INFO_REQUEST = "LOAD_MY_INFO_REQUEST";
+export const LOAD_MY_INFO_SUCCESS = "LOAD_MY_INFO_SUCCESS";
+export const LOAD_MY_INFO_FAILURE = "LOAD_MY_INFO_FAILURE";
 
 export const LOAD_USER_REQUEST = "LOAD_USER_REQUEST";
 export const LOAD_USER_SUCCESS = "LOAD_USER_SUCCESS";
@@ -110,6 +116,20 @@ const reducer = (state = initialState, action) =>
         draft.loadFollowingsLoading = false;
         draft.loadFollowingsError = action.e;
         break;
+      case LOAD_MY_INFO_REQUEST:
+        draft.loadMyInfoLoading = true;
+        draft.loadMyInfoDone = false;
+        draft.loadMyInfoError = null;
+        break;
+      case LOAD_MY_INFO_SUCCESS:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoDone = true;
+        draft.me = action.data;
+        break;
+      case LOAD_MY_INFO_FAILURE:
+        draft.loadMyInfoLoading = false;
+        draft.loadMyInfoError = action.e;
+        break;
       case LOAD_USER_REQUEST:
         draft.loadUserLoading = true;
         draft.loadUserDone = false;
@@ -118,7 +138,7 @@ const reducer = (state = initialState, action) =>
       case LOAD_USER_SUCCESS:
         draft.loadUserLoading = false;
         draft.loadUserDone = true;
-        draft.me = action.data;
+        draft.userInfo = action.data;
         break;
       case LOAD_USER_FAILURE:
         draft.loadUserLoading = false;

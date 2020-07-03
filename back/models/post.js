@@ -1,5 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const Post = sequelize.define(
+    // STRING, TEXT, BOOLEAN, INTEGER, FLOAT, DATETIME
     "Post",
     {
       content: {
